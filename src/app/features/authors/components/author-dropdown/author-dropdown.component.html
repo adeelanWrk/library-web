@@ -1,0 +1,16 @@
+<div class="mb-4">
+  <label for="authorSelect" class="block text-gray-700 text-sm font-bold mb-2">
+    เลือกผู้แต่ง:
+  </label>
+  <select
+    id="authorSelect"
+    [(ngModel)]="selectedAuthorId"
+    (change)="onSelectionChange()"
+    class="block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-700"
+  >
+    <option [ngValue]="null">--- เลือกผู้แต่ง ---</option>
+    <option *ngFor="let author of authors" [ngValue]="author.authorId">
+      {{ author.firstName }} {{ author.lastName }} ({{ author.penName }})
+    </option>
+  </select>
+</div>

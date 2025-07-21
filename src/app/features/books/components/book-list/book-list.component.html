@@ -1,0 +1,17 @@
+<div *ngIf="books && books.length > 0; else noBooks" class="bg-white shadow-md rounded-lg p-6">
+  <h3 class="text-xl font-semibold mb-4 text-gray-800">รายชื่อหนังสือ:</h3>
+  <ul class="divide-y divide-gray-200">
+    <li *ngFor="let book of books" class="py-3 flex justify-between items-center">
+      <div>
+        <div class="text-lg font-medium text-gray-900">{{ book.title }}</div>
+        <div class="text-sm text-gray-600">ผู้แต่ง: {{ book.authors }} ({{ book.authorCount }} คน)</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noBooks>
+  <div *ngIf="books !== null" class="text-center text-gray-500 py-8">
+    ไม่พบหนังสือสำหรับผู้แต่งที่เลือก
+  </div>
+</ng-template>

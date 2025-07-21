@@ -1,0 +1,9 @@
+/*
+   ถ้าคุณอยาก override theme ของ AG-Grid หรือเพิ่ม style เฉพาะ
+   สำหรับ AG-Grid โดยปกติจะ import theme ใน angular.json แล้ว
+   แต่ถ้าอยากปรับแต่งละเอียด เช่น padding, font-size ของตาราง ให้ทำที่นี่
+*/
+.ag-theme-quartz {
+    /* ตัวอย่าง: ปรับขนาด font ในตาราง */
+    /* font-size: 0.85rem; */
+}
