@@ -4,8 +4,7 @@
   </h1>
 
   <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-    <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)">
-    </app-author-dropdown>
+    <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)"></app-author-dropdown>
   </div>
 
   <div *ngIf="isLoadingBooks" class="text-center text-gray-500 my-4">
@@ -16,8 +15,9 @@
     {{ booksErrorMessage }}
   </div>
 
-  <ag-grid-angular style="width: 100%; height: 500px;" class="ag-theme-alpine" [rowData]="books"
-    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)" [pagination]="true"
-    [paginationPageSize]="10">
+
+  <ag-grid-angular class="ag-theme-alpine w-full h-[500px]" [rowData]="books" [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)">
   </ag-grid-angular>
+
 </div>

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { BookService } from '../../services/book.service';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
-import { IAuthors, IBookSummary } from '../../models/book-overiew-model';
-import { AgGridModule } from 'ag-grid-angular';
 import { CommonModule } from '@angular/common';
+import { ColDef, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { AgGridModule } from 'ag-grid-angular';
+
 import { AuthorDropdownComponent } from '../../../authors/components/author-dropdown/author-dropdown.component';
+import { BookService } from '../../services/book.service';
+import { IAuthors, IBookSummary } from '../../models/book-overiew-model';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-books-overview-page',
@@ -23,29 +26,28 @@ export class BooksOverviewPageComponent implements OnInit {
   isLoadingBooks = false;
   booksErrorMessage: string | null = null;
 
+
   columnDefs: ColDef[] = [
-    { field: 'title', headerName: 'Title', sortable: true, filter: true, flex: 1 },
-    { field: 'publisher', headerName: 'Publisher', sortable: true, filter: true, flex: 1 },
-    { field: 'price', headerName: 'Price', sortable: true, filter: 'agNumberColumnFilter', flex: 1 },
-    { field: 'authorCount', headerName: 'Number of Authors', sortable: true, filter: 'agNumberColumnFilter', flex: 1 },
+    { field: 'title', headerName: 'Title', sortable: true, filter: true },
+    { field: 'authorCount', headerName: 'Author Count', sortable: true, filter: 'agNumberColumnFilter' },
     {
       headerName: 'Authors',
-      valueGetter: (params) =>
-        (params.data.authors as IAuthors[]).map((a: IAuthors) => `${a.firstName} ${a.lastName}`).join(', '),
+      valueGetter: params =>
+        params.data.authors.map((a: IAuthors) => `${a.firstName} ${a.lastName}`).join(', '),
       flex: 2
     }
   ];
 
+
   defaultColDef: ColDef = {
-    resizable: true,
     sortable: true,
     filter: true,
+    resizable: true,
   };
 
   constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
-    // เริ่มต้นไม่มีข้อมูลจนกว่าจะเลือกผู้แต่ง
   }
 
   onAuthorSelected(authorId: number | null): void {
@@ -70,6 +72,7 @@ export class BooksOverviewPageComponent implements OnInit {
   }
 
   onGridReady(params: GridReadyEvent) {
+    console.log('Grid ready, row count:', params.api.getDisplayedRowCount());
     params.api.sizeColumnsToFit();
   }
   onEventAuthorSelected(authorId: number | null): void {
