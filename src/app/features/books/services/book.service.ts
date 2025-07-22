@@ -1,29 +1,36 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PagedResult } from '../models/paged-result.model';
-import { BookSummary } from '../models/book-summary.model';
+import { environment } from '../../../../environments/environment';
+import { IBookSummary } from '../models/book-overiew-model';
+
+export interface GetBooksPagedRequestDto {
+  page: number;
+  pageSize: number;
+  sortBy?: string;
+  sortDirection?: string;
+  authorId: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
-  private apiUrl = 'https://localhost:7001/api/books'; // <--- เปลี่ยนเป็น URL จริงของ Backend
+  private baseUrl = environment.apiBaseUrl + '/books';
 
   constructor(private http: HttpClient) { }
 
-  getBooksPaged(
-    page: number,
-    pageSize: number,
-    sortBy: string,
-    sortDirection: string
-  ): Observable<PagedResult<BookSummary>> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('pageSize', pageSize.toString())
-      .set('sortBy', sortBy)
-      .set('sortDirection', sortDirection);
+  getBooksPaged(request: GetBooksPagedRequestDto): Observable<IBookSummary[]> {
+    return this.http.post<IBookSummary[]>(this.baseUrl, request);
+  }
 
-    return this.http.get<PagedResult<BookSummary>>(this.apiUrl, { params });
+  getBooksByAuthorId(authorId: number): Observable<IBookSummary[]> {
+    return this.getBooksPaged({
+      authorId,
+      page: 1,
+      pageSize: 10,
+      sortBy: 'Title',
+      sortDirection: 'ASC'
+    });
   }
 }

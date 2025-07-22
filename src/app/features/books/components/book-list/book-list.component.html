@@ -1,7 +1,10 @@
-<div *ngIf="books && books.length > 0; else noBooks" class="bg-white shadow-md rounded-lg p-6">
+<div *ngIf="isLoading" class="text-center py-4 text-gray-600">กำลังโหลดหนังสือ...</div>
+<div *ngIf="errorMessage" class="text-center py-4 text-red-600">{{ errorMessage }}</div>
+
+<div *ngIf="!isLoading && books !== null && books.length > 0; else noBooks" class="bg-white shadow-md rounded-lg p-6">
   <h3 class="text-xl font-semibold mb-4 text-gray-800">รายชื่อหนังสือ:</h3>
   <ul class="divide-y divide-gray-200">
-    <li *ngFor="let book of books" class="py-3 flex justify-between items-center">
+    <li *ngFor="let book of books" class="py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center">
       <div>
         <div class="text-lg font-medium text-gray-900">{{ book.title }}</div>
         <div class="text-sm text-gray-600">ผู้แต่ง: {{ book.authors }} ({{ book.authorCount }} คน)</div>
@@ -11,7 +14,10 @@
 </div>
 
 <ng-template #noBooks>
-  <div *ngIf="books !== null" class="text-center text-gray-500 py-8">
+  <div *ngIf="!isLoading && books !== null && books.length === 0" class="text-center text-gray-500 py-8">
     ไม่พบหนังสือสำหรับผู้แต่งที่เลือก
+  </div>
+  <div *ngIf="!isLoading && books === null" class="text-center text-gray-500 py-8">
+    กรุณาเลือกผู้แต่งเพื่อดูรายชื่อหนังสือ
   </div>
 </ng-template>

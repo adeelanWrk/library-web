@@ -1,12 +1,23 @@
 <div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">หน้าแรก: รายการหนังสือตามผู้แต่ง</h1>
+  <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">
+    หน้าแรก: รายการหนังสือตามผู้แต่ง
+  </h1>
 
   <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-    <app-author-dropdown (authorSelected)="onAuthorSelected($event)"></app-author-dropdown>
+    <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)">
+    </app-author-dropdown>
   </div>
 
-  <div *ngIf="isLoading" class="text-center py-4 text-gray-600">กำลังโหลด...</div>
-  <div *ngIf="errorMessage" class="text-center py-4 text-red-600">{{ errorMessage }}</div>
+  <div *ngIf="isLoadingBooks" class="text-center text-gray-500 my-4">
+    กำลังโหลดข้อมูลหนังสือ...
+  </div>
 
-  <app-book-list [books]="books"></app-book-list>
+  <div *ngIf="booksErrorMessage" class="text-center text-red-600 my-4">
+    {{ booksErrorMessage }}
+  </div>
+
+  <ag-grid-angular style="width: 100%; height: 500px;" class="ag-theme-alpine" [rowData]="books"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)" [pagination]="true"
+    [paginationPageSize]="10">
+  </ag-grid-angular>
 </div>

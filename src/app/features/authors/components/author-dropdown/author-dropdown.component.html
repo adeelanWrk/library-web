@@ -2,7 +2,10 @@
   <label for="authorSelect" class="block text-gray-700 text-sm font-bold mb-2">
     เลือกผู้แต่ง:
   </label>
+  <div *ngIf="isLoading" class="text-gray-500 text-sm">กำลังโหลดผู้แต่ง...</div>
+  <div *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</div>
   <select
+    *ngIf="!isLoading"
     id="authorSelect"
     [(ngModel)]="selectedAuthorId"
     (change)="onSelectionChange()"
