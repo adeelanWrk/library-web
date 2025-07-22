@@ -15,9 +15,9 @@
     {{ booksErrorMessage }}
   </div>
 
-
   <ag-grid-angular class="ag-theme-alpine w-full h-[500px]" [rowData]="books" [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)">
+    [defaultColDef]="defaultColDef" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)"
+    (paginationChanged)="onPaginationChanged($event)" (sortChanged)="onSortChanged($event)">
   </ag-grid-angular>
 
 </div>

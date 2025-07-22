@@ -23,14 +23,4 @@ export class BookService {
   getBooksPaged(request: GetBooksPagedRequestDto): Observable<IBookSummary[]> {
     return this.http.post<IBookSummary[]>(this.baseUrl, request);
   }
-
-  getBooksByAuthorId(authorId: number): Observable<IBookSummary[]> {
-    return this.getBooksPaged({
-      authorId,
-      page: 1,
-      pageSize: 10,
-      sortBy: 'Title',
-      sortDirection: 'ASC'
-    });
-  }
 }
