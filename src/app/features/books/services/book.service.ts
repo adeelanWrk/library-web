@@ -3,14 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { IBookSummary } from '../models/book-overiew-model';
+import { IGetBooksPagedRequest } from '../models/paged-result.model';
+import { IResultServerSide } from '../../core/model';
 
-export interface GetBooksPagedRequestDto {
-  page: number;
-  pageSize: number;
-  sortBy?: string;
-  sortDirection?: string;
-  authorId: number;
-}
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +16,7 @@ export class BookService {
 
   constructor(private http: HttpClient) { }
 
-  getBooksPaged(request: GetBooksPagedRequestDto): Observable<IBookSummary[]> {
-    return this.http.post<IBookSummary[]>(this.baseUrl, request);
+  getBooks(request: IGetBooksPagedRequest): Observable<IResultServerSide<IBookSummary[]>> {
+    return this.http.post<IResultServerSide<IBookSummary[]>>(this.baseUrl, request);
   }
 }

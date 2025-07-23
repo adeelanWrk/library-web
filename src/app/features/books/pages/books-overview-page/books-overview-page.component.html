@@ -14,10 +14,24 @@
   <div *ngIf="booksErrorMessage" class="text-center text-red-600 my-4">
     {{ booksErrorMessage }}
   </div>
+  <ng-container *ngIf="!isLoadingBooks && !booksErrorMessage && books.length === 0; else haveData">
+    <div class="text-center text-gray-500 my-4">
+      ไม่มีหนังสือที่แสดง
+    </div>
+  </ng-container>
 
-  <ag-grid-angular class="ag-theme-alpine w-full h-[500px]" [rowData]="books" [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)"
-    (paginationChanged)="onPaginationChanged($event)" (sortChanged)="onSortChanged($event)">
-  </ag-grid-angular>
-
+  <ng-template #haveData>
+    <ag-grid-angular
+      class="ag-theme-alpine w-full h-[500px]"
+      [rowData]="books"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="paginationProperties.pageSize"
+      (gridReady)="onGridReady($event)"
+      (paginationChanged)="onPaginationChanged($event)"
+      (sortChanged)="onSortChanged($event)"
+    >
+    </ag-grid-angular>
+  </ng-template>
 </div>

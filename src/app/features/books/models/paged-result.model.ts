@@ -1,6 +1,5 @@
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
+import { IRequestServerSide } from "../../core/model";
+
+export interface IGetBooksPagedRequest extends IRequestServerSide {
+  authorId: number;
 }
