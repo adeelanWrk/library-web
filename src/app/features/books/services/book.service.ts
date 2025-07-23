@@ -6,8 +6,6 @@ import { IBookSummary } from '../models/book-overiew-model';
 import { IGetBooksPagedRequest } from '../models/paged-result.model';
 import { IResultServerSide } from '../../core/model';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
