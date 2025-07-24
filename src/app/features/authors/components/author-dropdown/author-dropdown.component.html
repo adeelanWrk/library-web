@@ -1,19 +1,33 @@
-<div class="mb-4">
+<div class="mb-4"> 
   <label for="authorSelect" class="block text-gray-700 text-sm font-bold mb-2">
     เลือกผู้แต่ง:
   </label>
+
   <div *ngIf="isLoading" class="text-gray-500 text-sm">กำลังโหลดผู้แต่ง...</div>
   <div *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</div>
-  <select
-    *ngIf="!isLoading"
-    id="authorSelect"
-    [(ngModel)]="selectedAuthorId"
-    (change)="onSelectionChange()"
-    class="block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-700"
-  >
-    <option [ngValue]="null">--- เลือกผู้แต่ง ---</option>
-    <option *ngFor="let author of authors" [ngValue]="author.authorId">
-      {{ author.firstName }} {{ author.lastName }} ({{ author.penName }})
-    </option>
-  </select>
+
+  <ng-select *ngIf="!isLoading" id="authorSelect" 
+    [items]="authors$ | async" 
+    bindLabel="penName" 
+    bindValue="authorId"
+    [typeahead]="searchInput$" 
+    [(ngModel)]="selectedAuthorId" 
+    (change)="onSelectionChange($event)"
+    [loadingText]="'กำลังโหลด...'" 
+    [typeToSearchText]="'พิมพ์เพื่อค้นหา'" 
+    placeholder="--- เลือกผู้แต่ง ---"
+    class="block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-700">
+    
+    <ng-template ng-option-tmp let-item="item">
+      {{ item.firstName }} {{ item.lastName }} ({{ item.penName }})
+    </ng-template>
+  </ng-select>
+
+  <!-- ข้อความแจ้งเตือนสไตล์ Material -->
+  <p class="md-warning" *ngIf="(searchInput$ | async) as term">
+    <span *ngIf="term.length > 0 && term.length < 3">
+      <span class="material-icons md-warning-icon">error_outline</span>
+      กรุณาพิมพ์อย่างน้อย 3 ตัวอักษรเพื่อค้นหา
+    </span>
+  </p>
 </div>

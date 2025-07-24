@@ -13,7 +13,11 @@ export class AuthorService {
 
   constructor(private http: HttpClient) { }
 
-  getAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>(`${this.apiUrl}/authors`);
+  // getAuthors(term: string): Observable<Author[]> {
+  //   return this.http.get<Author[]>(`${this.apiUrl}/authors?search=${term}`);
+  // }
+  searchAuthors(term: string): Observable<Author[]> {
+    return this.http.get<Author[]>(`${this.apiUrl}/authors/search?term=${term}`);
   }
+
 }

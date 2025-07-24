@@ -1,0 +1,14 @@
+.md-warning {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem; /* text-xs */
+  color: #f44336; /* สีแดง Material Design */
+  margin-top: 0.25rem;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.md-warning-icon {
+  font-size: 18px;
+  margin-right: 4px;
+  color: #f44336;
+}
