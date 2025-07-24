@@ -20,6 +20,7 @@ import { PaginationComponent } from '../../../core/Pagination/pagination.compone
 import { IPaginationProperties } from '../../../core/Pagination/model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
+import { TitleCellRendererComponent } from '../../components/ag-extension-components/title-cell-renderer.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -57,18 +58,12 @@ export class BooksOverviewPageComponent implements OnInit {
   };
   columnDefs: ColDef[] = [
     { field: 'row', headerName: 'Row', sortable: true, filter: false },
-    { 
-      field: 'title', 
-      headerName: 'Title', 
-      sortable: true, 
+    {
+      field: 'title',
+      headerName: 'Title',
+      sortable: true,
       filter: false,
-      cellRenderer: (params: any) => {
-        return `<span 
-          style="text-decoration: underline; color: #1976d2; cursor: pointer;"
-          (click)="redirectTo(${params.data.bookId})"
-          class="ag-title-link"
-        >${params.value}</span>`;
-      }
+      cellRenderer: TitleCellRendererComponent
     },
     {
       field: 'authors',
@@ -134,7 +129,7 @@ export class BooksOverviewPageComponent implements OnInit {
         this.paginationProperties.totalPages = res.totalPages || 0;
         this.paginationProperties.page = res.page || 1
         this.paginationProperties.pageSize = res.pageSize || 10;
-        
+
         this.isLoading = false;
       },
       error: (err: any) => {

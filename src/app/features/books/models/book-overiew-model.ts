@@ -5,7 +5,7 @@ export interface IAuthors {
 }
 
 export interface IBookSummary {
-  row: number;
+  rowTotal: number;
   bookId: number;
   title: string;
   authors: IAuthors[];
