@@ -15,7 +15,9 @@ import { AuthorDropdownComponent } from '../../../authors/components/author-drop
 import { BookService } from '../../services/book.service';
 import { IAuthors, IBookSummary } from '../../models/book-overiew-model';
 import { IResultServerSide } from '../../../core/model';
-import { IPaginationProperties } from '../../../core/ag-drid/pagination';
+import { IGetBooksPagedRequest } from '../../models/paged-result.model';
+import { PaginationComponent } from '../../../core/Pagination/pagination.component/pagination.component';
+import { IPaginationProperties } from '../../../core/Pagination/model';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -27,29 +29,27 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   imports: [
     CommonModule,
     AgGridModule,
-    AuthorDropdownComponent
+    AuthorDropdownComponent,
+    PaginationComponent
   ]
 })
 export class BooksOverviewPageComponent implements OnInit {
-  pagination = true;
-  paginationPageSize = 10;
-  paginationPageSizeSelector = [10, 20, 50, 100];
 
 
   books: IBookSummary[] = [];
   isLoadingBooks = false;
   booksErrorMessage: string | null = null;
-  private paginationInitialized = false;
-  
+
 
   private gridApi!: GridApi;
   private currentAuthorId: number | null = null;
   private lastSortModel: string | null = null;
   public paginationProperties: IPaginationProperties = {
     page: 1,
+    totalPages: 20,
     pageSize: 10,
-    totalCount: 0,
-    totalPages: 0,
+    totalItems: 200,
+    pageSizeOptions: [10, 20, 50, 100],
     sortBy: 'title',
     sortDirection: 'ASC'
   };
@@ -64,7 +64,6 @@ export class BooksOverviewPageComponent implements OnInit {
     },
     { field: 'authorCount', headerName: 'Author Count', sortable: true, filter: false },
   ];
-    // { field: 'authorCount', headerName: 'Author Count', sortable: true, filter: 'agNumberColumnFilter' },
 
 
   defaultColDef: ColDef = {
@@ -76,20 +75,28 @@ export class BooksOverviewPageComponent implements OnInit {
   constructor(private bookService: BookService) { }
 
   ngOnInit(): void { }
+  get requestParameters(): IGetBooksPagedRequest {
+    return {
+      authorId: this.currentAuthorId,
+      page: this.paginationProperties.page,
+      pageSize: this.paginationProperties.pageSize,
+      sortBy: this.paginationProperties.sortBy,
+      sortDirection: this.paginationProperties.sortDirection
+    };
+  }
 
   onEventAuthorSelected(authorId: number | null): void {
-    console.log('Selected author ID:', authorId);
     this.currentAuthorId = authorId;
     if (authorId !== null) {
       const pageSize = this.gridApi?.paginationGetPageSize() || 10;
       this.gridApi?.paginationGoToFirstPage();
-      this.loadBooksByAuthor(authorId, 1, pageSize);
+      this.loadData(authorId, 1, pageSize);
     } else {
       this.books = [];
     }
   }
 
-  private loadBooksByAuthor(
+  private loadData(
     authorId: number,
     page: number = 1,
     pageSize: number = 10,
@@ -106,9 +113,13 @@ export class BooksOverviewPageComponent implements OnInit {
       sortBy,
       sortDirection
     }).subscribe({
-      next: (data: IResultServerSide<IBookSummary[]>) => {
-        this.books = data.data || [];
-        this.paginationProperties.totalCount = data.totalCount || 0;
+      next: (res: IResultServerSide<IBookSummary[]>) => {
+        this.books = res.data || [];
+        this.paginationProperties.totalItems = res.totalCount || 0;
+        this.paginationProperties.totalPages = res.totalPages || 0;
+        this.paginationProperties.page = res.page || 1
+        this.paginationProperties.pageSize = res.pageSize || 10;
+        
         this.isLoadingBooks = false;
       },
       error: (err: any) => {
@@ -124,18 +135,7 @@ export class BooksOverviewPageComponent implements OnInit {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
   }
-  onPaginationChanged(event: PaginationChangedEvent) {
-    if (!this.paginationInitialized) {
-      this.paginationInitialized = true;
-      return;
-    }
 
-    if (this.gridApi && this.currentAuthorId !== null && event.newPage && event.newPageSize) {
-      const currentPage = this.gridApi.paginationGetCurrentPage() + 1;
-      const pageSize = this.gridApi.paginationGetPageSize();
-      this.loadBooksByAuthor(this.currentAuthorId, currentPage, pageSize);
-    }
-  }
 
   // onPaginationChanged(event: PaginationChangedEvent) {
   //   if (!this.paginationInitialized) {
@@ -151,7 +151,7 @@ export class BooksOverviewPageComponent implements OnInit {
   //     const sortBy = sortModel[0]?.colId || 'Title';
   //     const sortDirection = (sortModel[0]?.sort || 'asc').toUpperCase();
 
-  //     this.loadBooksByAuthor(this.currentAuthorId, currentPage, pageSize, sortBy, sortDirection);
+  //     this.loadData(this.currentAuthorId, currentPage, pageSize, sortBy, sortDirection);
   //   }
   // }
 
@@ -167,15 +167,18 @@ export class BooksOverviewPageComponent implements OnInit {
 
       sortBy = eventColumns[0].colId;
       sortDirection = eventColumns[0].sort!.toUpperCase();
+      this.paginationProperties.sortBy = sortBy;
+      this.paginationProperties.sortDirection = sortDirection;
+
       const currentSort = `${sortBy}_${sortDirection}`;
 
-      console.log('Current sort:', currentSort);
-      console.log('Last sort model:', this.lastSortModel);
-      console.log('xxx', currentSort !== this.lastSortModel);
+      // console.log('Current sort:', currentSort);
+      // console.log('Last sort model:', this.lastSortModel);
+      // console.log('xxx', currentSort !== this.lastSortModel);
 
       if (currentSort !== this.lastSortModel) {
         this.lastSortModel = currentSort;
-        this.loadBooksByAuthor(
+        this.loadData(
           this.currentAuthorId,
           1,
           this.gridApi.paginationGetPageSize(),
@@ -184,5 +187,20 @@ export class BooksOverviewPageComponent implements OnInit {
         );
       }
     }
+  }
+
+
+  onPageChanged(newPage: number) {
+    this.paginationProperties.page = newPage;
+
+    this.loadData(this.requestParameters.authorId!, this.paginationProperties.page,
+      this.paginationProperties.pageSize, this.paginationProperties.sortBy, this.paginationProperties.sortDirection);
+  }
+
+  onPageSizeChanged(newSize: number) {
+    this.paginationProperties.pageSize = newSize;
+    this.paginationProperties.page = 1;
+    this.loadData(this.requestParameters.authorId!, 1, newSize,
+      this.paginationProperties.sortBy, this.paginationProperties.sortDirection);
   }
 }

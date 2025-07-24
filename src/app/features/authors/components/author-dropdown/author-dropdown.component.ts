@@ -18,6 +18,8 @@ export class AuthorDropdownComponent implements OnInit {
   searchInput$ = new Subject<string>();
   authors$!: Observable<Author[]>;
   selectedAuthorId: number | null = null;
+  isLoading: boolean = false;
+  errorMessage: string | null = null;
 
   @Output() authorSelected = new EventEmitter<number | null>();
 
@@ -29,7 +31,7 @@ export class AuthorDropdownComponent implements OnInit {
       this.searchInput$.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        filter(term => term.length >= 3)
+        filter(term => term?.length >= 3)
       )
     ).pipe(
       switchMap(term => this.authorService.searchAuthors(term?.trim())),

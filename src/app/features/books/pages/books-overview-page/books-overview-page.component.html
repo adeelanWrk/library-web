@@ -2,7 +2,6 @@
   <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">
     หน้าแรก: รายการหนังสือตามผู้แต่ง
   </h1>
-
   <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
     <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)"></app-author-dropdown>
   </div>
@@ -14,24 +13,18 @@
   <div *ngIf="booksErrorMessage" class="text-center text-red-600 my-4">
     {{ booksErrorMessage }}
   </div>
+
   <ng-container *ngIf="!isLoadingBooks && !booksErrorMessage && books.length === 0; else haveData">
-    <div class="text-center text-gray-500 my-4">
-      ไม่มีหนังสือที่แสดง
-    </div>
+    <div class="text-center text-gray-500 my-4">ไม่มีหนังสือที่แสดง</div>
   </ng-container>
 
   <ng-template #haveData>
-    <ag-grid-angular
-      class="ag-theme-alpine w-full h-[500px]"
-      [rowData]="books"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
-      [pagination]="true"
-      [paginationPageSize]="paginationProperties.pageSize"
-      (gridReady)="onGridReady($event)"
-      (paginationChanged)="onPaginationChanged($event)"
-      (sortChanged)="onSortChanged($event)"
-    >
+    <ag-grid-angular class="ag-theme-alpine w-full h-[500px]" [rowData]="books" [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef" [pagination]="false" [suppressPaginationPanel]="true"
+      (gridReady)="onGridReady($event)" (sortChanged)="onSortChanged($event)">
     </ag-grid-angular>
+    
+    <app-pagination [paginationProperties]="paginationProperties" (pageChange)="onPageChanged($event)"
+      (pageSizeChange)="onPageSizeChanged($event)"></app-pagination>
   </ng-template>
 </div>

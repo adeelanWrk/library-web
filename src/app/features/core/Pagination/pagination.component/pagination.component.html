@@ -1,0 +1,44 @@
+<div class="flex flex-row items-center justify-end gap-4 mt-4 flex-wra">
+
+  <!-- Left side: page size selector + total items -->
+  <div class="flex items-center gap-4 whitespace-nowrap">
+    <div class="flex items-center gap-2">
+      <label for="pageSizeSelect" class="mr-2">Rows per page:</label>
+      <select id="pageSizeSelect" class="border rounded px-2 py-1" [value]="paginationProperties.pageSize"
+        (change)="onSelectChange($event)">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+
+
+  </div>
+
+  <!-- Right side: pagination buttons -->
+  <div *ngIf="paginationProperties.totalPages > 1" class="pagination-container flex-grow">
+    <button class="pagination-button" (click)="goToPage(paginationProperties.page - 1)"
+      [disabled]="paginationProperties.page === 1">
+      «
+    </button>
+
+    <ng-container *ngFor="let p of pageArray">
+      <button *ngIf="p !== '...'; else dots" class="pagination-button" [class.active]="paginationProperties.page === p"
+        (click)="goToPage(p)">
+        {{ p }}
+      </button>
+
+      <ng-template #dots>
+        <span class="pagination-dots">...</span>
+      </ng-template>
+    </ng-container>
+
+    <button class="pagination-button" (click)="goToPage(paginationProperties.page + 1)"
+      [disabled]="paginationProperties.page === paginationProperties.totalPages">
+      »
+    </button>
+  </div>
+  <!-- Show total items -->
+  <div class="text-gray-600 text-sm">
+    Total items: {{ paginationProperties.totalItems }}
+  </div>
+
+</div>
