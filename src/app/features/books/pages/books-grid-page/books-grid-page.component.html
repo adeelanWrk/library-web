@@ -1,0 +1,16 @@
+<div class="mb-3">
+  <!-- <input type="text" placeholder="Search all columns..." (input)="onQuickFilterChanged($event)"
+    class="border border-gray-300 rounded px-2 py-1 w-full max-w-sm" />
+</div> -->
+
+<div style="height: 600px; width: 100%;" class="ag-theme-alpine">
+  <ag-grid-angular style="width: 100%; height: 100%;" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+    [rowBuffer]="rowBuffer" [rowModelType]="rowModelType" [cacheBlockSize]="cacheBlockSize"
+    [cacheOverflowSize]="cacheOverflowSize" [maxConcurrentDatasourceRequests]="maxConcurrentDatasourceRequests"
+    [infiniteInitialRowCount]="infiniteInitialRowCount" [maxBlocksInCache]="maxBlocksInCache" [rowData]="rowData"
+    (gridReady)="onGridReady($event)" />
+</div>
+
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+  <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+</div>

@@ -25,3 +25,13 @@ export interface IResultServerSide<T> {
   pageSize: number;
   totalPages: number;
 }
+
+export interface IResult<T> {
+  data: T | null;
+  desc: string | null;
+  isError: boolean;
+  statusCode: number;
+  errorMessage: string | null;
+ 
+}
+
