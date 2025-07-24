@@ -9,6 +9,7 @@ import { BookListComponent } from './features/books/components/book-list/book-li
 import { BooksOverviewPageComponent } from './features/books/pages/books-overview-page/books-overview-page.component';
 import { BookTableComponent } from './features/books/components/book-table/book-table.component';
 import { BooksSummaryPageComponent } from './features/books/pages/books-summary-page/books-summary-page.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BooksSummaryPageComponent } from './features/books/pages/books-summary-
     BookListComponent,
     BooksOverviewPageComponent,
     BookTableComponent,
-    BooksSummaryPageComponent
+    BooksSummaryPageComponent,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

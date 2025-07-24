@@ -5,9 +5,9 @@ export interface IAuthors {
 }
 
 export interface IBookSummary {
+  row: number;
+  bookId: number;
   title: string;
-  publisher: string;
-  price: number;
-  authorCount: number;
   authors: IAuthors[];
+  authorCount: number;
 }

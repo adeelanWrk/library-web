@@ -18,6 +18,8 @@ import { IResultServerSide } from '../../../core/model';
 import { IGetBooksPagedRequest } from '../../models/paged-result.model';
 import { PaginationComponent } from '../../../core/Pagination/pagination.component/pagination.component';
 import { IPaginationProperties } from '../../../core/Pagination/model';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -30,16 +32,16 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     CommonModule,
     AgGridModule,
     AuthorDropdownComponent,
-    PaginationComponent
+    PaginationComponent,
+    MatProgressSpinnerModule
   ]
 })
 export class BooksOverviewPageComponent implements OnInit {
 
 
   books: IBookSummary[] = [];
-  isLoadingBooks = false;
+  isLoading = false;
   booksErrorMessage: string | null = null;
-
 
   private gridApi!: GridApi;
   private currentAuthorId: number | null = null;
@@ -54,7 +56,20 @@ export class BooksOverviewPageComponent implements OnInit {
     sortDirection: 'ASC'
   };
   columnDefs: ColDef[] = [
-    { field: 'title', headerName: 'Title', sortable: true, filter: false },
+    { field: 'row', headerName: 'Row', sortable: true, filter: false },
+    { 
+      field: 'title', 
+      headerName: 'Title', 
+      sortable: true, 
+      filter: false,
+      cellRenderer: (params: any) => {
+        return `<span 
+          style="text-decoration: underline; color: #1976d2; cursor: pointer;"
+          (click)="redirectTo(${params.data.bookId})"
+          class="ag-title-link"
+        >${params.value}</span>`;
+      }
+    },
     {
       field: 'authors',
       headerName: 'Authors',
@@ -72,7 +87,7 @@ export class BooksOverviewPageComponent implements OnInit {
     resizable: true,
   };
 
-  constructor(private bookService: BookService) { }
+  constructor(private bookService: BookService, private router: Router) { }
 
   ngOnInit(): void { }
   get requestParameters(): IGetBooksPagedRequest {
@@ -103,7 +118,7 @@ export class BooksOverviewPageComponent implements OnInit {
     sortBy: string = 'title',
     sortDirection: string = 'ASC'
   ) {
-    this.isLoadingBooks = true;
+    this.isLoading = true;
     this.booksErrorMessage = null;
 
     this.bookService.getBooks({
@@ -120,12 +135,12 @@ export class BooksOverviewPageComponent implements OnInit {
         this.paginationProperties.page = res.page || 1
         this.paginationProperties.pageSize = res.pageSize || 10;
         
-        this.isLoadingBooks = false;
+        this.isLoading = false;
       },
       error: (err: any) => {
         console.error('Error fetching books by author:', err);
         this.booksErrorMessage = 'ไม่สามารถดึงข้อมูลหนังสือสำหรับผู้แต่งที่เลือกได้';
-        this.isLoadingBooks = false;
+        this.isLoading = false;
         this.books = [];
       }
     });
@@ -202,5 +217,9 @@ export class BooksOverviewPageComponent implements OnInit {
     this.paginationProperties.page = 1;
     this.loadData(this.requestParameters.authorId!, 1, newSize,
       this.paginationProperties.sortBy, this.paginationProperties.sortDirection);
+  }
+  redirectTo(bookId: any) {
+    console.log('Redirecting to book details for bookId:', bookId);
+    this.router.navigate(['/books', bookId]);
   }
 }

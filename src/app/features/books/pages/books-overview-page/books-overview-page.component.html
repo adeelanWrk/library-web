@@ -6,15 +6,15 @@
     <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)"></app-author-dropdown>
   </div>
 
-  <div *ngIf="isLoadingBooks" class="text-center text-gray-500 my-4">
-    กำลังโหลดข้อมูลหนังสือ...
+  <div *ngIf="isLoading" class="flex justify-center my-4">
+    <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
   </div>
 
   <div *ngIf="booksErrorMessage" class="text-center text-red-600 my-4">
     {{ booksErrorMessage }}
   </div>
 
-  <ng-container *ngIf="!isLoadingBooks && !booksErrorMessage && books.length === 0; else haveData">
+  <ng-container *ngIf="!isLoading && !booksErrorMessage && books.length === 0; else haveData">
     <div class="text-center text-gray-500 my-4">ไม่มีหนังสือที่แสดง</div>
   </ng-container>
 
