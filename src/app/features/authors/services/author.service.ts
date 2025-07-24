@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Author } from '../models/author.model';
+import { IAuthor } from '../models/author.model';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -16,8 +16,8 @@ export class AuthorService {
   // getAuthors(term: string): Observable<Author[]> {
   //   return this.http.get<Author[]>(`${this.apiUrl}/authors?search=${term}`);
   // }
-  searchAuthors(term: string): Observable<Author[]> {
-    return this.http.get<Author[]>(`${this.apiUrl}/authors/search?term=${term}`);
+  searchAuthors(term: string): Observable<IAuthor[]> {
+    return this.http.get<IAuthor[]>(`${this.apiUrl}/authors/search?term=${term}`);
   }
 
 }

@@ -52,7 +52,7 @@ export class BooksOverviewPageComponent implements OnInit {
     totalPages: 20,
     pageSize: 10,
     totalItems: 200,
-    pageSizeOptions: [10, 20, 50, 100],
+    pageSizeOptions: [5, 10, 20, 50, 100],
     sortBy: 'title',
     sortDirection: 'ASC'
   };

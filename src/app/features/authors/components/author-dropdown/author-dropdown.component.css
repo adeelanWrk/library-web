@@ -12,3 +12,27 @@
   margin-right: 4px;
   color: #f44336;
 }
+
+::ng-deep ng-dropdown-panel {
+  @apply border border-gray-300 shadow-md rounded-md bg-white;
+}
+
+
+::ng-deep ng-dropdown-panel {
+  left: 0 !important;
+  right: auto !important;
+  width: 100% !important; /* ให้ dropdown เท่ากับความกว้างของกล่อง input */
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  margin-top: 4px; /* เว้นระยะเล็กน้อย */
+}
+
+::ng-deep ng-dropdown-panel .ng-option {
+  padding-left: 16px;  /* ขยายช่องว่างซ้าย */
+  padding-right: 16px; /* ขยายช่องว่างขวา */
+  padding-top: 8px;    /* เพิ่มช่องว่างบน */
+  padding-bottom: 8px; /* เพิ่มช่องว่างล่าง */
+}
+

@@ -19,11 +19,12 @@
   </ng-container>
 
   <ng-template #haveData>
-    <ag-grid-angular class="ag-theme-alpine w-full h-[500px]" [rowData]="books" [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef" [pagination]="false" [suppressPaginationPanel]="true"
+    <ag-grid-angular class="ag-theme-alpine w-full" [rowData]="books" [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef" [pagination]="false" [suppressPaginationPanel]="true" domLayout="autoHeight"
       (gridReady)="onGridReady($event)" (sortChanged)="onSortChanged($event)">
     </ag-grid-angular>
-    
+
+
     <app-pagination [paginationProperties]="paginationProperties" (pageChange)="onPageChanged($event)"
       (pageSizeChange)="onPageSizeChanged($event)"></app-pagination>
   </ng-template>

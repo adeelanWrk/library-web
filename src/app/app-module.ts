@@ -8,7 +8,6 @@ import { AuthorDropdownComponent } from './features/authors/components/author-dr
 import { BookListComponent } from './features/books/components/book-list/book-list.component';
 import { BooksOverviewPageComponent } from './features/books/pages/books-overview-page/books-overview-page.component';
 import { BookTableComponent } from './features/books/components/book-table/book-table.component';
-import { BooksSummaryPageComponent } from './features/books/pages/books-summary-page/books-summary-page.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
@@ -24,7 +23,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     BookListComponent,
     BooksOverviewPageComponent,
     BookTableComponent,
-    BooksSummaryPageComponent,
     MatProgressSpinnerModule
   ],
   providers: [],

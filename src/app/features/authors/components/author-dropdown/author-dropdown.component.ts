@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthorService } from '../../services/author.service';
-import { Author } from '../../models/author.model';
+import { IAuthor } from '../../models/author.model';
 import { Subject, Observable, merge, of } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -16,10 +16,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class AuthorDropdownComponent implements OnInit {
   searchInput$ = new Subject<string>();
-  authors$!: Observable<Author[]>;
+  authors$!: Observable<IAuthor[]>;
   selectedAuthorId: number | null = null;
   isLoading: boolean = false;
   errorMessage: string | null = null;
+  selectedAuthor: IAuthor | null = null;
 
   @Output() authorSelected = new EventEmitter<number | null>();
 
@@ -38,7 +39,10 @@ export class AuthorDropdownComponent implements OnInit {
     );
   }
 
-  onSelectionChange(authorId: Author | null): void {
-    this.authorSelected.emit(authorId?.authorId || null);
-  }
+
+onSelectionChange(author: IAuthor | null): void {
+  this.selectedAuthorId = author?.authorId ?? null;
+  console.log('Selected Author ID:', this.selectedAuthorId);
+  this.authorSelected.emit(this.selectedAuthorId);
+}
 }

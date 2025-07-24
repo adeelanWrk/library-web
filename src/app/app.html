@@ -1,2 +1,18 @@
+<!-- Navbar -->
+<nav class="bg-white border-b border-gray-200 px-6 py-3 shadow-sm">
+    <div class="flex justify-between items-center">
+        <div class="text-xl font-semibold text-gray-800">
+            Library Overviews
+        </div>
+        <div class="space-x-6 text-gray-600 text-sm">
+            <a routerLink="/" routerLinkActive="text-blue-600 font-medium">Home</a>
+            <a routerLink="/books" routerLinkActive="text-blue-600 font-medium">Books</a>
+            <a routerLink="/authors" routerLinkActive="text-blue-600 font-medium">Authors</a>
+        </div>
+    </div>
+</nav>
 
-<router-outlet />
+<!-- Main Content Area -->
+<main class="p-4">
+    <router-outlet></router-outlet>
+</main>
