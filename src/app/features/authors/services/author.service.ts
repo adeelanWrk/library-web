@@ -13,9 +13,9 @@ export class AuthorService {
 
   constructor(private http: HttpClient) { }
 
-  // getAuthors(term: string): Observable<Author[]> {
-  //   return this.http.get<Author[]>(`${this.apiUrl}/authors?search=${term}`);
-  // }
+  getAuthors(): Observable<IAuthor[]> {
+    return this.http.get<IAuthor[]>(`${this.apiUrl}/authors/raw`);
+  }
   searchAuthors(term: string): Observable<IAuthor[]> {
     return this.http.get<IAuthor[]>(`${this.apiUrl}/authors/search?term=${term}`);
   }
