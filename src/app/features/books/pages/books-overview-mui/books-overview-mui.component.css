@@ -1,9 +1,124 @@
-table {
-  border-collapse: collapse;
-  width: 100%;
+/*
+ * AG-Grid Alpine Theme for Angular Material Table and Paginator (Updated)
+ * This stylesheet overrides default Angular Material styles to
+ * replicate the look and feel of the ag-grid `ag-theme-alpine`.
+*/
+
+/* ==========================================================================
+   --ag-alpine-theme variables (approximations)
+   ========================================================================== */
+:host {
+  --ag-alpine-background-color: #ffffff;
+  --ag-alpine-header-background-color: #f8f8f8;
+  --ag-alpine-row-hover-color: #f0f0f0;
+  --ag-alpine-border-color: #dfe1e5; /* More accurate, lighter row separator color */
+  --ag-alpine-main-border-color: #babfc7; /* Main outer border color */
+  --ag-alpine-foreground-color: #000000;
+  --ag-alpine-secondary-foreground-color: #666666;
+  --ag-alpine-active-color: #1e88e5;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
+/* ==========================================================================
+   NEW: Container to wrap both table and paginator
+   ========================================================================== */
+.ag-alpine-container {
+  border: 1px solid var(--ag-alpine-main-border-color);
+  border-radius: 8px; /* AG-Grid has slightly rounded corners */
+  overflow: hidden; /* Ensures children conform to the border-radius */
+  background-color: var(--ag-alpine-background-color);
 }
+
+/* ==========================================================================
+   Mat-Table Styling
+   ========================================================================== */
+.mat-mdc-table {
+  background-color: transparent;
+  color: var(--ag-alpine-foreground-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.mat-mdc-header-row {
+  background-color: var(--ag-alpine-header-background-color);
+}
+
+.mat-mdc-header-cell {
+  color: var(--ag-alpine-foreground-color);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 16px;
+  height: 48px;
+  text-transform: none;
+  border-bottom: 1px solid var(--ag-alpine-border-color);
+}
+
+.mat-mdc-row {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--ag-alpine-border-color);
+  transition: background-color 0.2s;
+}
+
+.mat-mdc-row:hover {
+  background-color: var(--ag-alpine-row-hover-color);
+}
+
+.mat-mdc-cell {
+  color: var(--ag-alpine-foreground-color);
+  padding: 0 16px;
+  height: 48px;
+  vertical-align: middle; /* Better vertical alignment for rowspan */
+}
+
+.mat-mdc-cell.text-right, .mat-mdc-header-cell.text-right {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.mat-mdc-table .mat-mdc-row:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   Mat-Paginator Styling
+   ========================================================================== */
+.mat-mdc-paginator {
+  background-color: var(--ag-alpine-header-background-color);
+  color: var(--ag-alpine-secondary-foreground-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  border-top: none;
+}
+
+.mat-mdc-paginator,
+.mat-mdc-select-value-text {
+  color: var(--ag-alpine-secondary-foreground-color);
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--ag-alpine-secondary-foreground-color);
+}
+
+.mat-mdc-select-panel .mat-mdc-option.mat-mdc-option-active {
+  background: var(--ag-alpine-row-hover-color);
+}
+
+.mat-mdc-select-panel .mat-mdc-option.mat-selected {
+  color: var(--ag-alpine-active-color);
+}
+
+/* Tailwind utility class for centering */
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) { .container { max-width: 640px; } }
+@media (min-width: 768px) { .container { max-width: 768px; } }
+@media (min-width: 1024px) { .container { max-width: 1024px; } }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.p-4 { padding: 1rem; }
+.text-center { text-align: center; }
+.mb-8 { margin-bottom: 2rem; }
+.text-3xl { font-size: 1.875rem; }
+.font-bold { font-weight: 700; }
+.text-blue-700 { color: #1d4ed8; }
+.my-8 { margin-top: 2rem; margin-bottom: 2rem; }
+.flex { display: flex; }
+.justify-center { justify-content: center; }
