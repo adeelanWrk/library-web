@@ -5,3 +5,10 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.swal2-confirm {
+  background-color: #3085d6 !important;
+}
+
+.swal2-cancel {
+  background-color: #d33 !important;
+}

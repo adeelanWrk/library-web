@@ -5,12 +5,14 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 import { IGetBooksPagedRequest } from '../../models/paged-result.model';
 import { IPaginationProperties } from '../../../core/Pagination/model';
 import { BookService } from '../../services/book.service';
 import { Router } from '@angular/router';
 import { IBookWithAuthorsMui, IBookWithAuthorsMuiFlat } from '../../models/book-overiew-mui-model';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AlertService } from '../../../core/alert/alert.service';
 
 @Component({
   selector: 'books-overview-mui',
@@ -22,15 +24,15 @@ import { IBookWithAuthorsMui, IBookWithAuthorsMuiFlat } from '../../models/book-
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    HttpClientModule
+    MatProgressSpinnerModule
   ],
 })
 export class BooksOverviewMuiComponent implements OnInit {
-  // headerColumns: string[] = ['title', 'authorName'];
-  // displayedColumns: string[] = ['title', 'authorName'];
-
-  headerColumns: string[] = ['title', 'publisher', 'price', 'authorName'];
-  displayedColumns: string[] = ['title', 'publisher', 'price', 'authorName'];
+  
+  private readonly rowSpanFields = ['title', 'publisher', 'price', 'authorCount'];
+  
+  readonly headerColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
+  readonly displayedColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
   dataSource = new MatTableDataSource<IBookWithAuthorsMuiFlat | null>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -42,9 +44,13 @@ export class BooksOverviewMuiComponent implements OnInit {
     pageSizeOptions: [5, 10, 20, 50, 100],
     sortBy: 'title',
     sortDirection: 'ASC'
-  };
+  }!;
   currentAuthorId: number | null = 1994;
-  constructor(private bookService: BookService, private router: Router) {
+  isLoading: boolean = false;
+  constructor(
+    private bookService: BookService,
+    private router: Router,
+    private sw: AlertService) {
     this.loadData();
   }
 
@@ -60,40 +66,52 @@ export class BooksOverviewMuiComponent implements OnInit {
     };
   }
 
-  loadData() {
-    this.bookService.getBooksMui(this.requestParameters).subscribe({
-      next: (res) => {
-        console.log('Books loaded:', res.data);
-        const processedData: IBookWithAuthorsMuiFlat[] = [];
+  loadData(): void {
+    this.isLoading = true;
 
-        res.data?.forEach(book => {
-          book.authors?.forEach((author, index) => {
-            if (author != null) {
-              processedData.push({
-                bookId: book.bookId,
-                title: book.title,
-                publisher: book.publisher,
-                price: book.price,
-                authorId: author.authorId,
-                authorName: `${author.firstName} ${author.lastName}`,
-                authorCount: book.authorCount
-              });
-            }
-          });
-        });
-
-        this.dataSource.data = processedData;
-        this.paginationProperties.totalItems = res.totalCount ?? 0;
-        this.paginationProperties.totalPages = res.totalPages ?? 0;
-        this.paginationProperties.page = res.page ?? 1;
-        this.paginationProperties.pageSize = res.pageSize ?? this.paginationProperties.pageSize;
-      },
+    this.bookService.getBooksMui(this.requestParameters).pipe(
+      // tap(() => this.sw.success('Books loaded successfully!')),
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: (response) => this.handleSuccessfulResponse(response),
       error: (error) => {
-        console.error('Error loading books:', error);
+        this.handleError(error);
+        this.sw.error('Failed to load books');
       }
     });
   }
 
+  private handleSuccessfulResponse(response: any): void {
+    const books = response.data ?? [];
+    const flattenedData = this.flattenBooksWithAuthors(books);
+    this.dataSource.data = flattenedData;
+    this.setPaginationProperties(response);
+  }
+
+  private flattenBooksWithAuthors(books: IBookWithAuthorsMui[]): IBookWithAuthorsMuiFlat[] {
+    return books.flatMap(book =>
+      (book.authors ?? []).filter(author => author != null).map(author => ({
+        bookId: book.bookId,
+        title: book.title,
+        publisher: book.publisher,
+        price: book.price,
+        authorId: author.authorId,
+        authorName: `${author.firstName} ${author.lastName}`,
+        authorCount: book.authorCount
+      }))
+    );
+  }
+
+  private setPaginationProperties(response: any): void {
+    this.paginationProperties.totalItems = response.totalCount ?? 0;
+    this.paginationProperties.totalPages = response.totalPages ?? 0;
+    this.paginationProperties.page = response.page ?? 1;
+    this.paginationProperties.pageSize = response.pageSize ?? this.paginationProperties.pageSize;
+  }
+
+  private handleError(error: any): void {
+    console.error('Error loading books:', error);
+  }
   onPageChange(event: PageEvent) {
     this.paginationProperties.page = event.pageIndex + 1;
     this.paginationProperties.pageSize = event.pageSize;
@@ -106,17 +124,19 @@ export class BooksOverviewMuiComponent implements OnInit {
     this.loadData();
   }
   getRowSpan(field: string, index: number): number | null {
-    if (field === 'title' || field === 'publisher' || field === 'price') {
-      if (index === 0 && this.dataSource.data[0]) return this.dataSource.data[0].authorCount;
-      if (
-        this.dataSource.data[index] != null &&
-        this.dataSource.data[index - 1] != null &&
-        this.dataSource.data[index].bookId !== this.dataSource.data[index - 1]!.bookId
-      ) {
-        return this.dataSource.data[index]!.authorCount;
-      }
+    if (!this.rowSpanFields.includes(field)) {
       return null;
     }
+
+    const row = this.dataSource.data[index];
+    const prevRow = this.dataSource.data[index - 1];
+
+    if (!row) return null;
+
+    if (index === 0 || !prevRow || row.bookId !== prevRow.bookId) {
+      return row.authorCount;
+    }
+
     return null;
   }
 }
