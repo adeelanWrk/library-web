@@ -5,28 +5,20 @@
       Library Overviews
     </div>
     <div class="space-x-6 text-gray-600 text-sm">
-      <a
-        routerLink="/overview"
-        routerLinkActive="text-blue-600 font-medium"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:text-blue-500 transition"
-      >
+      <a routerLink="/overview-mui" routerLinkActive="text-blue-600 font-medium"
+        [routerLinkActiveOptions]="{ exact: true }" class="hover:text-blue-500 transition">
+        Books With Authors (MUI)
+      </a>
+      <a routerLink="/overview" routerLinkActive="text-blue-600 font-medium" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-blue-500 transition">
         Books With Authors
       </a>
-      <a
-        routerLink="/books"
-        routerLinkActive="text-blue-600 font-medium"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:text-blue-500 transition"
-      >
+      <a routerLink="/books" routerLinkActive="text-blue-600 font-medium" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-blue-500 transition">
         Books
       </a>
-      <a
-        routerLink="/authors"
-        routerLinkActive="text-blue-600 font-medium"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:text-blue-500 transition"
-      >
+      <a routerLink="/authors" routerLinkActive="text-blue-600 font-medium" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-blue-500 transition">
         Authors
       </a>
     </div>
@@ -36,5 +28,5 @@
 
 <!-- Main Content Area -->
 <main class="p-4">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </main>

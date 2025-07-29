@@ -3,7 +3,7 @@ export interface IPaginationProperties {
     totalPages: number;
     pageSize: number;
     totalItems?: number;
-    pageSizeOptions?: number[];
+    pageSizeOptions: number[];
     sortBy: string;
     sortDirection: string;
 }

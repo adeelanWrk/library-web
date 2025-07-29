@@ -1,0 +1,55 @@
+:host ::ng-deep table.mat-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #d6d6d6;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+}
+
+:host ::ng-deep .mat-header-row {
+  background-color: #f5f7fa;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+:host ::ng-deep .mat-header-cell {
+  padding: 8px 12px;
+  border-right: 1px solid #e0e0e0;
+  color: #444;
+  background-color: #f5f7fa;
+}
+
+:host ::ng-deep .mat-row {
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+:host ::ng-deep .mat-row:hover {
+  background-color: #e7f3ff;
+}
+
+:host ::ng-deep .mat-cell {
+  padding: 8px 12px;
+  border-right: 1px solid #f0f0f0;
+  vertical-align: middle;
+  color: #333;
+}
+
+:host ::ng-deep .mat-header-cell:last-child,
+:host ::ng-deep .mat-cell:last-child {
+  border-right: none;
+}
+
+:host ::ng-deep .mat-cell[rowspan] {
+  vertical-align: top;
+}
+
+:host ::ng-deep .mat-paginator {
+  border-top: 1px solid #ccc;
+  padding: 8px 0;
+}
+
+:host ::ng-deep .mat-sort-header-arrow {
+  color: #666;
+}

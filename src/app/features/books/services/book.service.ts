@@ -6,6 +6,7 @@ import { IBookSummary } from '../models/book-overiew-model';
 import { IGetBooksPagedRequest } from '../models/paged-result.model';
 import { IResultServerSide } from '../../core/model';
 import { IBooksQueryParams, IBooksResponse } from '../models/book-grid-model';
+import { IBookWithAuthorsMui } from '../models/book-overiew-mui-model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,11 @@ export class BookService {
   private baseUrl = environment.apiBaseUrl + '/books';
 
   constructor(private http: HttpClient) { }
+
+  getBooksMui(request: IGetBooksPagedRequest): Observable<IResultServerSide<IBookWithAuthorsMui[]>> {
+    return this.http.post<IResultServerSide<IBookWithAuthorsMui[]>>(this.baseUrl + '/mui', request);
+  }
+
 
   getBooks(request: IGetBooksPagedRequest): Observable<IResultServerSide<IBookSummary[]>> {
     return this.http.post<IResultServerSide<IBookSummary[]>>(this.baseUrl, request);
@@ -36,6 +42,4 @@ export class BookService {
 
     return this.http.get<IBooksResponse>(this.baseUrl + '/infinite', { params: httpParams });
   }
-
-  
 }
