@@ -10,7 +10,7 @@ import { IGetBooksPagedRequest } from '../../models/paged-result.model';
 import { IPaginationProperties } from '../../../core/Pagination/model';
 import { BookService } from '../../services/book.service';
 import { Router } from '@angular/router';
-import { IBookWithAuthorsMui } from '../../models/book-overiew-mui-model';
+import { IBookWithAuthorsMui, IBookWithAuthorsMuiFlat } from '../../models/book-overiew-mui-model';
 
 @Component({
   selector: 'books-overview-mui',
@@ -26,10 +26,12 @@ import { IBookWithAuthorsMui } from '../../models/book-overiew-mui-model';
   ],
 })
 export class BooksOverviewMuiComponent implements OnInit {
-  displayedColumns: string[] = ['title', 'authors'];
-  dataSource = new MatTableDataSource<IBookWithAuthorsMui | null>([]);
+  // headerColumns: string[] = ['title', 'authorName'];
+  // displayedColumns: string[] = ['title', 'authorName'];
 
-
+  headerColumns: string[] = ['title', 'publisher', 'price', 'authorName'];
+  displayedColumns: string[] = ['title', 'publisher', 'price', 'authorName'];
+  dataSource = new MatTableDataSource<IBookWithAuthorsMuiFlat | null>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public paginationProperties: IPaginationProperties = {
@@ -58,15 +60,33 @@ export class BooksOverviewMuiComponent implements OnInit {
     };
   }
 
-
   loadData() {
     this.bookService.getBooksMui(this.requestParameters).subscribe({
       next: (res) => {
-        this.dataSource.data = res.data ?? [];
-        this.paginationProperties.totalItems = res.totalCount;
-        this.paginationProperties.totalPages = res.totalPages;
-        this.paginationProperties.page = res.page;
-        this.paginationProperties.pageSize = res.pageSize;
+        console.log('Books loaded:', res.data);
+        const processedData: IBookWithAuthorsMuiFlat[] = [];
+
+        res.data?.forEach(book => {
+          book.authors?.forEach((author, index) => {
+            if (author != null) {
+              processedData.push({
+                bookId: book.bookId,
+                title: book.title,
+                publisher: book.publisher,
+                price: book.price,
+                authorId: author.authorId,
+                authorName: `${author.firstName} ${author.lastName}`,
+                authorCount: book.authorCount
+              });
+            }
+          });
+        });
+
+        this.dataSource.data = processedData;
+        this.paginationProperties.totalItems = res.totalCount ?? 0;
+        this.paginationProperties.totalPages = res.totalPages ?? 0;
+        this.paginationProperties.page = res.page ?? 1;
+        this.paginationProperties.pageSize = res.pageSize ?? this.paginationProperties.pageSize;
       },
       error: (error) => {
         console.error('Error loading books:', error);
@@ -84,5 +104,19 @@ export class BooksOverviewMuiComponent implements OnInit {
     this.paginationProperties.sortBy = event.active;
     this.paginationProperties.sortDirection = event.direction;
     this.loadData();
+  }
+  getRowSpan(field: string, index: number): number | null {
+    if (field === 'title' || field === 'publisher' || field === 'price') {
+      if (index === 0 && this.dataSource.data[0]) return this.dataSource.data[0].authorCount;
+      if (
+        this.dataSource.data[index] != null &&
+        this.dataSource.data[index - 1] != null &&
+        this.dataSource.data[index].bookId !== this.dataSource.data[index - 1]!.bookId
+      ) {
+        return this.dataSource.data[index]!.authorCount;
+      }
+      return null;
+    }
+    return null;
   }
 }

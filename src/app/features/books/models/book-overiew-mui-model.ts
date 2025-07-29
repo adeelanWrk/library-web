@@ -5,17 +5,19 @@ export interface IBookWithAuthorsMui {
   bookId: number;
   title: string;
   publisher: string;
-  price: number;
+  price: number | null;
   authors: IAuthor[];
   authorCount: number;
 }
 
 export interface IBookWithAuthorsMuiFlat {
-  bookId: number;
-  title: string;
-  publisher: string;
-  price: number;
-  authorId: number;
-  author: string;
-  rowspan: number;
+  bookId: number | null;
+  title: string | null;
+  publisher: string | null;
+  price: number | null;
+  authorId: number | null;
+  authorName: string | null;
+  // rowspan: number | null;
+  authorCount: number | null;
 }
+
