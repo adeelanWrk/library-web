@@ -21,3 +21,15 @@ export interface IBookWithAuthorsMuiFlat {
   authorCount: number | null;
 }
 
+export interface IBookWithAuthorsMuiTextToTable {
+  bookId: number | null;
+  title: string | null;
+  publisher: string | null;
+  price: number | null;
+  authorId: number | null;
+  firstName: string | null;
+  lastName: string | null;
+  penName: string | null;
+}
+
+

@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { IBookSummary } from '../models/book-overiew-model';
 import { IGetBooksPagedRequest } from '../models/paged-result.model';
-import { IResultServerSide } from '../../core/model';
+import { IResultServerSide, PagedResult } from '../../core/model';
 import { IBooksQueryParams, IBooksResponse } from '../models/book-grid-model';
-import { IBookWithAuthorsMui } from '../models/book-overiew-mui-model';
+import { IBookWithAuthorsMui, IBookWithAuthorsMuiTextToTable } from '../models/book-overiew-mui-model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,10 @@ export class BookService {
   private baseUrl = environment.apiBaseUrl + '/books';
 
   constructor(private http: HttpClient) { }
+
+  updateRawData(request: IBookWithAuthorsMuiTextToTable[]): Observable<PagedResult<any>> {
+    return this.http.post<PagedResult<any>>(this.baseUrl + '/update-raw-data', request);
+  }
 
   exportRawData(): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/export-raw-data`, {

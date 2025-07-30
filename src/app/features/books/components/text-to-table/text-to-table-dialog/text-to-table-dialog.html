@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Paste Data from Excel</h2>
+<div *ngIf="isLoading" class="flex justify-center my-8">
+  <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<mat-dialog-content>
+  <textarea (input)="onInputChange($event)" rows="6" cols="80" placeholder="Paste Excel data here..."
+    class="w-full border p-2 rounded"></textarea>
+
+  <h3 class="mt-4">Valid Converted Data</h3>
+  <table *ngIf="parsedBooks.length > 0" class="w-full border-collapse border mt-2">
+    <thead>
+      <tr>
+        <th class="border p-2">Book ID</th>
+        <th class="border p-2">Title</th>
+        <th class="border p-2">Publisher</th>
+        <th class="border p-2">Price</th>
+        <th class="border p-2">Author ID</th>
+        <th class="border p-2">First Name</th>
+        <th class="border p-2">Last Name</th>
+        <th class="border p-2">Pen Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of parsedBooks">
+        <td class="border p-2">{{ book.bookId }}</td>
+        <td class="border p-2">{{ book.title }}</td>
+        <td class="border p-2">{{ book.publisher }}</td>
+        <td class="border p-2">{{ book.price }}</td>
+        <td class="border p-2">{{ book.authorId }}</td>
+        <td class="border p-2">{{ book.firstName }}</td>
+        <td class="border p-2">{{ book.lastName }}</td>
+        <td class="border p-2">{{ book.penName }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mr-2 flex items-center disabled:opacity-50"
+    (click)="save()" [disabled]="parsedBooks.length === 0">
+    <span class="material-icons mr-1">save</span> Save
+  </button>
+  <button mat-button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center"
+    (click)="close()">
+    <span class="material-icons mr-1">close</span> Close
+  </button>
+</mat-dialog-actions>

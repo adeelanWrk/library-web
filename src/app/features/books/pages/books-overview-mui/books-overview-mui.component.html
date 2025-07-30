@@ -8,20 +8,24 @@
   </div>
 
   <ng-container *ngIf="!isLoading && dataSource.data.length > 0">
-    <div class="flex justify-end items-center gap-4 mb-4">
+    <div class="flex items-center justify-end gap-2 mb-4">
+      <button (click)="showModel()"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded flex items-center">
+        <i class="bi bi-download mr-2"></i> text to table
+      </button>
+
       <button (click)="exportRawData()"
         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded flex items-center">
         <i class="bi bi-download mr-2"></i> Export Raw Data
       </button>
 
-      <input type="file" (change)="onFileChange($event)" accept=".xlsx,.xls" class="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
-               file:text-sm file:font-semibold file:bg-gray-100 file:text-blue-700 hover:file:bg-blue-50" />
-
-      <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
-        (click)="importRawData()">
-        Import Raw Data
-      </button>
+      <label for="fileUpload"
+        class="cursor-pointer bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded flex items-center">
+        <i class="bi bi-upload mr-2"></i> เลือกไฟล์และ Import
+      </label>
+      <input type="file" id="fileUpload" (change)="onFileChange($event)" accept=".xlsx,.xls" class="hidden" />
     </div>
+
 
 
 

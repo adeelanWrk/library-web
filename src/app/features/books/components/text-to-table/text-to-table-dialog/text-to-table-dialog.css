@@ -1,0 +1,15 @@
+/* ใส่ styling เบื้องต้นถ้าต้องการ */
+textarea {
+  font-family: monospace;
+  resize: vertical;
+}
+
+table {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  text-align: left;
+}

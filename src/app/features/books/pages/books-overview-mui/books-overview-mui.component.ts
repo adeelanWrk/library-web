@@ -14,6 +14,8 @@ import { IBookWithAuthorsMui, IBookWithAuthorsMuiFlat } from '../../models/book-
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertService } from '../../../core/alert/alert.service';
 import { saveAs } from 'file-saver';
+import { MatDialog } from '@angular/material/dialog';
+import { TextToTableDialogComponent } from '../../components/text-to-table/text-to-table-dialog/text-to-table-dialog';
 
 @Component({
   selector: 'books-overview-mui',
@@ -25,7 +27,8 @@ import { saveAs } from 'file-saver';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    TextToTableDialogComponent
   ],
 })
 export class BooksOverviewMuiComponent implements OnInit {
@@ -53,7 +56,9 @@ export class BooksOverviewMuiComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private router: Router,
-    private sw: AlertService) {
+    private sw: AlertService,
+    private dialog: MatDialog
+  ) {
     this.loadData();
   }
 
@@ -158,39 +163,61 @@ export class BooksOverviewMuiComponent implements OnInit {
       }
     });
   }
-  onFileChange(event: Event) {
+  async onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       const allowedTypes = [
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
-        'application/vnd.ms-excel', // .xls
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
       ];
       if (!allowedTypes.includes(file.type)) {
-        alert('Only Excel files (.xlsx, .xls) are allowed.');
+        this.sw.error('Only Excel files (.xlsx, .xls) are allowed.');
         this.selectedFile = null;
         return;
       }
       this.selectedFile = file;
+      const confirmed = await this.sw.confirm('Are you sure you want to import this file?');
+      if (confirmed) {
+        this.isLoading = true;
+        this.importRawData();
+      } else {
+        this.selectedFile = null;
+        this.sw.info('Import cancelled.');
+      }
     }
   }
-
   importRawData() {
     if (!this.selectedFile) {
-      alert('Please select an Excel file before importing.');
+      this.sw.error('Please select an Excel file before importing.');
       return;
     }
 
     this.bookService.importRawData(this.selectedFile).subscribe({
-      next: () => {
-        alert('Import successful');
+      next: (res) => {
+        this.sw.success(res?.desc ?? 'Import successful!');
         this.selectedFile = null;
         this.loadData();
       },
       error: (err) => {
-        alert('Import failed: ' + (err.error ?? 'Unknown error'));
-        console.error(err);
+        this.sw.error('Import failed: ' + (err.error ?? 'Unknown error'));
+        this.isLoading = false;
+
       }
     });
   }
-}
+  showModel(): void {
+    const dialogRef = this.dialog.open(TextToTableDialogComponent, {
+      width: '900px',
+      height: 'auto',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+      this.loadData();
+      }
+    });
+  }
+  
+  
+} 
