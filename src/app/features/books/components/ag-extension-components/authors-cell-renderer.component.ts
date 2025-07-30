@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';  // <-- import นี้ต้องมี
+import { CommonModule } from '@angular/common';  
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-authors-cell-renderer',
     standalone: true,
-    imports: [CommonModule],  // <-- ต้องเพิ่ม CommonModule ด้วย
+    imports: [CommonModule], 
     template: `
     <div class="flex flex-col gap-1">
       <span
