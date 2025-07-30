@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { IBookWithAuthorsMui, IBookWithAuthorsMuiFlat } from '../../models/book-overiew-mui-model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertService } from '../../../core/alert/alert.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'books-overview-mui',
@@ -28,9 +29,9 @@ import { AlertService } from '../../../core/alert/alert.service';
   ],
 })
 export class BooksOverviewMuiComponent implements OnInit {
-  
+
   private readonly rowSpanFields = ['title', 'publisher', 'price', 'authorCount'];
-  
+
   readonly headerColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
   readonly displayedColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
   dataSource = new MatTableDataSource<IBookWithAuthorsMuiFlat | null>([]);
@@ -47,6 +48,8 @@ export class BooksOverviewMuiComponent implements OnInit {
   }!;
   currentAuthorId: number | null = 1994;
   isLoading: boolean = false;
+  selectedFile: File | null = null;
+
   constructor(
     private bookService: BookService,
     private router: Router,
@@ -138,5 +141,56 @@ export class BooksOverviewMuiComponent implements OnInit {
     }
 
     return null;
+  }
+  exportRawData() {
+    this.isLoading = true;
+    this.bookService.exportRawData().subscribe({
+      next: (blob) => {
+        const now = new Date();
+        const dateStr = `${now.getDate().toString().padStart(2, '0')}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getFullYear()}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+        saveAs(blob, `rawData_${dateStr}.xlsx`);
+        this.sw.success('Raw data exported successfully!');
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Export failed:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const allowedTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-excel', // .xls
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Only Excel files (.xlsx, .xls) are allowed.');
+        this.selectedFile = null;
+        return;
+      }
+      this.selectedFile = file;
+    }
+  }
+
+  importRawData() {
+    if (!this.selectedFile) {
+      alert('Please select an Excel file before importing.');
+      return;
+    }
+
+    this.bookService.importRawData(this.selectedFile).subscribe({
+      next: () => {
+        alert('Import successful');
+        this.selectedFile = null;
+        this.loadData();
+      },
+      error: (err) => {
+        alert('Import failed: ' + (err.error ?? 'Unknown error'));
+        console.error(err);
+      }
+    });
   }
 }

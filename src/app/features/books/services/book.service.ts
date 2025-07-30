@@ -16,6 +16,37 @@ export class BookService {
 
   constructor(private http: HttpClient) { }
 
+  exportRawData(): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/export-raw-data`, {
+      responseType: 'blob',
+    });
+  }
+  // importRawData(file: File): Observable<any> {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   return this.http.post(`${this.baseUrl}/import-raw-data`, formData);
+  // }
+  importRawData(file: File): Observable<any> {
+  return new Observable(observer => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = (reader.result as string).split(',')[1];
+      this.http.post(`${this.baseUrl}/import-raw-data`, { fileBase64: base64String, fileName: file.name })
+        .subscribe({
+          next: data => {
+            observer.next(data);
+            observer.complete();
+          },
+          error: err => observer.error(err)
+        });
+    };
+    reader.onerror = err => observer.error(err);
+    reader.readAsDataURL(file);
+  });
+}
+
+
+
   getBooksMui(request: IGetBooksPagedRequest): Observable<IResultServerSide<IBookWithAuthorsMui[]>> {
     return this.http.post<IResultServerSide<IBookWithAuthorsMui[]>>(this.baseUrl + '/mui', request);
   }

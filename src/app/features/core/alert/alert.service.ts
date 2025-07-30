@@ -6,10 +6,10 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
   providedIn: 'root'
 })
 export class AlertService {
-  showAlert(title: string, text: string = '', icon: SweetAlertIcon = 'info') {
+  showAlert(title: string, html: string = '', icon: SweetAlertIcon = 'info') {
     return Swal.fire({
       title,
-      text,
+      html,
       icon,
       confirmButtonText: 'OK'
     });
