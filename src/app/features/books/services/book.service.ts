@@ -7,6 +7,7 @@ import { IGetBooksPagedRequest } from '../models/paged-result.model';
 import { IResultServerSide, PagedResult } from '../../core/model';
 import { IBooksQueryParams, IBooksResponse } from '../models/book-grid-model';
 import { IBookWithAuthorsMui, IBookWithAuthorsMuiTextToTable } from '../models/book-overiew-mui-model';
+import { IRequestParamHistory } from '../components/history-track/history-track';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,9 @@ export class BookService {
   private baseUrl = environment.apiBaseUrl + '/books';
 
   constructor(private http: HttpClient) { }
+  getHistoryTrack(request: IRequestParamHistory): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/history`, request);
+  }
 
   updateRawData(request: IBookWithAuthorsMuiTextToTable[]): Observable<PagedResult<any>> {
     return this.http.post<PagedResult<any>>(this.baseUrl + '/update-raw-data', request);

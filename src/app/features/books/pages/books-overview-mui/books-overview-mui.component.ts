@@ -225,6 +225,10 @@ export class BooksOverviewMuiComponent implements OnInit {
     const dialogRef = this.dialog.open(HistoryTrackComponent, {
       width: '1000px',
       height: 'auto',
+      data: {
+        bookId: element.bookId,
+        authorId: element.authorId
+      }
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -1,24 +1,37 @@
 <div class="p-4">
-    <div style="max-height: 400px; overflow-y: auto;">
-        <table class="table-auto border border-black w-full text-center">
-            <thead>
-            <tr class="bg-gray-300 text-center">
-                <th class="border border-black px-2">title</th>
-                <th class="border border-black px-2">publisher</th>
-                <th class="border border-black px-2">price</th>
-                <th class="border border-black px-2">author</th>
-                <th class="border border-black px-2">author Count</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let row of data; let i = index" >
-                    <td [ngClass]="getCellClass(i, 'title')" class="border border-black px-2">{{ row.title }}</td>
-                    <td [ngClass]="getCellClass(i, 'publisher')" class="border border-black px-2">{{ row.publisher }}</td>
-                    <td [ngClass]="getCellClass(i, 'price')" class="text-right border-black px-2">{{ row.price | number }}</td>
-                    <td [ngClass]="getCellClass(i, 'authors')" class="border border-black px-2">{{ row.authors }}</td>
-                    <td [ngClass]="getCellClass(i, 'authorCount')" class="text-right border border-black px-2">{{ row.authorCount }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <ng-container *ngIf="isLoading; else contentTemplate">
+        <div class="flex justify-center my-8">
+            <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+        </div>
+    </ng-container>
+
+
+    <ng-template #contentTemplate>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table-auto border border-black w-full text-center">
+                <thead>
+                    <tr class="bg-gray-300 text-center">
+                        <th class="border border-black px-2">title</th>
+                        <th class="border border-black px-2">publisher</th>
+                        <th class="border border-black px-2">price</th>
+                        <th class="border border-black px-2">author</th>
+                        <th class="border border-black px-2">author Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of data; let i = index">
+                        <td [ngClass]="getCellClass(i, 'title')" class="border border-black px-2">{{ row.title }}</td>
+                        <td [ngClass]="getCellClass(i, 'publisher')" class="border border-black px-2">{{ row.publisher
+                            }}</td>
+                        <td [ngClass]="getCellClass(i, 'price')" class="text-right border-black px-2">{{ row.price |
+                            number }}</td>
+                        <td [ngClass]="getCellClass(i, 'authors')" class="border border-black px-2">{{ row.authors }}
+                        </td>
+                        <td [ngClass]="getCellClass(i, 'authorCount')" class="text-right border border-black px-2">{{
+                            row.authorCount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-template>
 </div>
