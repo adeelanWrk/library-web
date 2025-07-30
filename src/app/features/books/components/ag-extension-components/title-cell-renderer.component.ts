@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   selector: 'app-title-cell-renderer',
   template: `
     <span
-      style="text-decoration: underline; color: #1976d2; cursor: pointer;"
+      
       (click)="goToDetail()"
     >
       {{ value }}
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
 })
+// style="text-decoration: underline; color: #1976d2; cursor: pointer;"
 export class TitleCellRendererComponent implements ICellRendererAngularComp {
   value: any;
   bookId!: number;

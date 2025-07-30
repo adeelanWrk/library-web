@@ -51,7 +51,7 @@ export class BooksOverviewMuiComponent implements OnInit {
     sortBy: 'title',
     sortDirection: 'ASC'
   }!;
-  currentAuthorId: number | null = 1994;
+  currentAuthorId: number | null = 1;
   isLoading: boolean = false;
   selectedFile: File | null = null;
 

@@ -1,19 +1,24 @@
-<!-- book-table-dialog.component.html -->
 <div class="p-4">
-  <table class="table-auto border border-black w-full text-center">
-    <thead>
-      <tr class="bg-gray-300">
-        <th class="border border-black px-2">ชื่อหนังสือ</th>
-        <th class="border border-black px-2">ชื่อผู้แต่ง</th>
-        <th class="border border-black px-2">จำนวนผู้แต่ง</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of data; let i = index" >
-        <td [ngClass]="getCellClass(i, 'bookTitle')" class="border border-black px-2">{{ row.bookTitle }}</td>
-        <td [ngClass]="getCellClass(i, 'authors')" class="border border-black px-2">{{ row.authors }}</td>
-        <td [ngClass]="getCellClass(i, 'authorCount')" class="border border-black px-2">{{ row.authorCount }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div style="max-height: 400px; overflow-y: auto;">
+        <table class="table-auto border border-black w-full text-center">
+            <thead>
+            <tr class="bg-gray-300 text-center">
+                <th class="border border-black px-2">title</th>
+                <th class="border border-black px-2">publisher</th>
+                <th class="border border-black px-2">price</th>
+                <th class="border border-black px-2">author</th>
+                <th class="border border-black px-2">author Count</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of data; let i = index" >
+                    <td [ngClass]="getCellClass(i, 'title')" class="border border-black px-2">{{ row.title }}</td>
+                    <td [ngClass]="getCellClass(i, 'publisher')" class="border border-black px-2">{{ row.publisher }}</td>
+                    <td [ngClass]="getCellClass(i, 'price')" class="text-right border-black px-2">{{ row.price | number }}</td>
+                    <td [ngClass]="getCellClass(i, 'authors')" class="border border-black px-2">{{ row.authors }}</td>
+                    <td [ngClass]="getCellClass(i, 'authorCount')" class="text-right border border-black px-2">{{ row.authorCount }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
