@@ -16,6 +16,7 @@ import { AlertService } from '../../../core/alert/alert.service';
 import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { TextToTableDialogComponent } from '../../components/text-to-table/text-to-table-dialog/text-to-table-dialog';
+import { HistoryTrackComponent } from '../../components/history-track/history-track';
 
 @Component({
   selector: 'books-overview-mui',
@@ -28,15 +29,16 @@ import { TextToTableDialogComponent } from '../../components/text-to-table/text-
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    TextToTableDialogComponent
+    TextToTableDialogComponent,
+    HistoryTrackComponent
   ],
 })
 export class BooksOverviewMuiComponent implements OnInit {
 
-  private readonly rowSpanFields = ['title', 'publisher', 'price', 'authorCount'];
+  private readonly rowSpanFields = ['history','title', 'publisher', 'price', 'authorCount'];
 
-  readonly headerColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
-  readonly displayedColumns: string[] = ['title', 'publisher', 'price', 'authorCount', 'authorName'];
+  readonly headerColumns: string[] = ['history','title', 'publisher', 'price', 'authorCount', 'authorName'];
+  readonly displayedColumns: string[] = ['history','title', 'publisher', 'price', 'authorCount', 'authorName'];
   dataSource = new MatTableDataSource<IBookWithAuthorsMuiFlat | null>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -218,6 +220,29 @@ export class BooksOverviewMuiComponent implements OnInit {
       }
     });
   }
+  
+   openHistoryTrackDialog(element: IBookWithAuthorsMuiFlat): void {
+    const dialogRef = this.dialog.open(HistoryTrackComponent, {
+      width: '1000px',
+      height: 'auto',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // if (result === true) {
+      // this.loadData();
+      // }
+    });
+  }
+  
+  onEventAuthorSelected(authorId: number | null): void {
+    this.currentAuthorId = authorId;
+    if (authorId !== null) {
+      this.currentAuthorId = authorId;
+      this.loadData();
+    } else {
+    }
+  }
+
   
   
 } 

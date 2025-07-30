@@ -8,6 +8,9 @@
   </div>
 
   <ng-container *ngIf="!isLoading && dataSource.data.length > 0">
+    <!-- <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+      <app-author-dropdown (authorSelected)="onEventAuthorSelected($event)"></app-author-dropdown>
+    </div> -->
     <div class="flex items-center justify-end gap-2 mb-4">
       <button (click)="showModel()"
         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded flex items-center">
@@ -31,6 +34,20 @@
 
     <div class="ag-alpine-container">
       <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="history">
+          <th mat-header-cell *matHeaderCellDef class="text-center">
+            History
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('history', i)"
+            [style.display]="getRowSpan('history', i) ? '' : 'none'" class="px-4 py-2 text-center">
+            <button (click)="openHistoryTrackDialog(element)"
+              class="bg-gray-500  hover:text-blue-800 transition-colors duration-200 p-2 rounded-full hover:bg-blue-100"
+              aria-label="History">
+              <i class="bi bi-clock-history text-lg"></i>
+            </button>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef> Title </th>
           <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('title', i)"
