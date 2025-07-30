@@ -86,7 +86,7 @@ export class TextToTableDialogComponent {
   }
 
   private handleSuccessfulResponse(response: any): void {
-    if (!response || response.status !== 200) {
+    if (!response || response.statusCode !== 200) {
       this.sw.error(response?.desc || 'Failed to update raw data');
       return;
     }
