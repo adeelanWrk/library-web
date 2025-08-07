@@ -1,4 +1,109 @@
 # LibraryWeb
+# 📚 library-web
+
+ระบบเว็บแอปพลิเคชัน Angular สำหรับจัดการข้อมูล (Data Management Web App)  
+พัฒนาโดยใช้ Angular 20 พร้อม AG Grid Community, Angular Material, และการจัดการข้อมูลขั้นสูงทั้งฝั่ง Client และ Server
+
+---
+
+## 📂 โครงสร้างโปรเจกต์
+```plaintext
+src/
+└── app/
+└── features/
+├── authors/
+│ ├── components/
+│ │ ├── author-dropdown/
+│ │ └── authors-grid-page/
+│ ├── models/
+│ ├── pages/
+│ └── services/
+├── books/
+│ ├── components/
+│ │ ├── ag-extension-components/
+│ │ ├── book-list/
+│ │ ├── book-table/
+│ │ ├── history-track/
+│ │ └── text-to-table/
+│ │ └── text-to-table-dialog/
+│ ├── models/
+│ ├── pages/
+│ │ ├── books-grid-page/
+│ │ ├── books-overview-mui/
+│ │ └── books-overview-page/
+│ └── services/
+└── core/
+├── alert/
+└── Pagination/
+└── pagination.component/
+
+## 🧠 แนวคิดการออกแบบ
+
+- โครงสร้างแบบ **feature-first** (authors, books, core)
+- แยก `components`, `services`, และ `models` ภายในแต่ละ feature อย่างชัดเจน
+- ใช้ reusable component เช่น `PaginationComponent` หรือ `alert`  ใน `core`
+- ใช้ lazy-loaded routing สำหรับ pages ต่าง ๆ เพื่อเพิ่ม performance
+
+
+
+---
+
+## 🧰 Tech Stack
+
+| Stack | รายละเอียด |
+|-------|------------|
+| **Framework** | Angular 20 |
+| **UI Library** | Angular Material, @ng-select/ng-select, SweetAlert2 |
+| **Data Grid** | AG Grid (Community Edition) |
+| **Reactive** | RxJS 7.8 |
+| **Export** | file-saver |
+| **Style** | Tailwind  |
+
+---
+
+## ✨ จุดเด่นของโปรเจกต์
+
+### ✅ 1. Custom Server-Side Filter
+
+มีการ **เขียนฟีเจอร์ filter ฝั่งเซิร์ฟเวอร์เอง** (server-side filtering) โดยใช้ AG Grid Community Edition ซึ่งไม่รองรับ built-in server-side filtering โดยตรง  
+👉 เขียน logic ดักจับ filter model และส่งไป backend เองเพื่อประมวลผล
+
+### 🚀 2. Lazy Loading / Infinite Scroll
+
+ใช้ AG Grid แบบ `infinite row model` เพื่อ Render ข้อมูลแบบ **lazy loading**
+ช่วยลดเวลาในการ render หน้า HTML 
+
+### 🔍 3. Client-Side Filtering
+
+รองรับการหน้า full filter Client-Side
+
+---
+
+## ⚙️ วิธีติดตั้ง
+
+```bash
+git clone <repository-url>
+cd library-web
+npm install
+ng serve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
 

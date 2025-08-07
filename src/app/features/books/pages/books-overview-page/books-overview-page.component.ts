@@ -50,7 +50,7 @@ export class BooksOverviewPageComponent implements OnInit {
   public paginationProperties: IPaginationProperties = {
     page: 1,
     totalPages: 20,
-    pageSize: 10,
+    pageSize: 5,
     totalItems: 200,
     pageSizeOptions: [5, 10, 20, 50, 100],
     sortBy: 'title',
